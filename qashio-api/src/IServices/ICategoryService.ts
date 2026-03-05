@@ -1,6 +1,6 @@
-import { CategoryResponse } from "src/dto/category/CategoryResponse";
-import { CreateCategory } from "src/dto/category/CreateCategory";
+import { CategoryResponseDto } from "src/dto/category/CategoryResponse";
+import { CreateCategoryDto } from "src/dto/category/CreateCategory";
 
 export  interface ICategoryService{
-    createCategory(dto:CreateCategory) : Promise<CategoryResponse>;
+    createCategory(dto:CreateCategoryDto) : Promise<CategoryResponseDto>;
 }
