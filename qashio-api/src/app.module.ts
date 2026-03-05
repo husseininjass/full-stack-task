@@ -7,6 +7,9 @@ import { CategoryService } from './services/CategoryServices';
 import { Category } from './entities/Category';
 import { Transactions } from './entities/Transaction';
 import { CategoryRepository } from './repos/CategoryRepo';
+import { TransactionsController } from './controllers/TransactionsController';
+import { TransactionsServices } from './services/TransactionsServices';
+import { TransactionsRepo } from './repos/TransactionsRepo';
 
 @Module({
   imports: [
@@ -23,11 +26,12 @@ import { CategoryRepository } from './repos/CategoryRepo';
     }),
     TypeOrmModule.forFeature([Category]),
   ],
-  controllers: [AppController, CategoryController],
+  controllers: [AppController, CategoryController , TransactionsController],
   providers: [AppService,
     {provide : "ICategoryService" ,  useClass: CategoryService},
-    { provide: 'ICategoryRepository', useClass: CategoryRepository }
-
+    {provide : "ITransactionsService" ,  useClass: TransactionsServices},
+    { provide: 'ICategoryRepository', useClass: CategoryRepository },
+    { provide: 'ITransactionsRepo', useClass: TransactionsRepo }
   ],
 })
 export class AppModule {}
