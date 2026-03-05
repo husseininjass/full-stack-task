@@ -2,7 +2,7 @@ import { TransactionType } from 'src/enums/TransactionType';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 import { Category } from './Category';
 
-@Entity()
+@Entity("transactions")
 export class Transactions {
   @PrimaryGeneratedColumn()
   id: number;

@@ -5,6 +5,10 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
+    volumes:
+      - ./qashio-api:/app          
+      - /app/node_modules            
+    command: sh -c "npm run build && npm run start:dev"
     depends_on:
       - postgres
       - redis
