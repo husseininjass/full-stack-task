@@ -24,7 +24,7 @@ import { TransactionsRepo } from './repos/TransactionsRepo';
       synchronize: true,          
       logging: true,              
     }),
-    TypeOrmModule.forFeature([Category]),
+    TypeOrmModule.forFeature([Category,Transactions]),
   ],
   controllers: [AppController, CategoryController , TransactionsController],
   providers: [AppService,

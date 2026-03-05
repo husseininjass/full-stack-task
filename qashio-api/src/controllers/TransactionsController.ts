@@ -9,5 +9,3 @@ export class TransactionsController {
         private readonly transactionService: ITransactionsService,
     ) {}
 }
-
-
