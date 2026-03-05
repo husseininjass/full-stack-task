@@ -1,15 +1,24 @@
-import { Controller, Post, Body, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Controller, Post, Body, UsePipes, ValidationPipe , Get , Query , Inject } from '@nestjs/common';
 import { CreateCategoryDto } from '../dto/category/CreateCategory';
 import { CategoryResponseDto } from '../dto/category/CategoryResponse';
-import { CategoryService } from 'src/services/CategoryServices';
+import { ICategoryService } from 'src/IServices/ICategoryService';
+import { Response } from 'src/responses/Response';
 
 @Controller('categories')
 export class CategoryController {
-    constructor(private readonly categoryService: CategoryService) {}
-
+    constructor(
+        @Inject('ICategoryService')
+        private readonly categoryService: ICategoryService,
+    ) {}
     @Post()
     @UsePipes(new ValidationPipe({ transform: true }))
-    async createCategory(@Body() dto: CreateCategoryDto): Promise<CategoryResponseDto> {
+    async createCategory(@Body() dto: CreateCategoryDto): Promise<Response<CategoryResponseDto>> {
         return this.categoryService.createCategory(dto);
     }
+    @Get()
+    async getAllCategories(@Query('page') page?: number , @Query('limit') limit?: number) {
+        return this.categoryService.getAllCategories(page, limit);
+    }
 }
+
+
