@@ -1,20 +1,22 @@
+# Uses Node 22.8.0 as the base environment
 FROM node:22.8.0
 
+# Create the working directory inside the container
 WORKDIR /app
 
-# Copy package files and install all dependencies (including dev)
+# Copy package files first to leverage Docker cache
 COPY package*.json ./
-RUN npm install @nestjs/typeorm typeorm pg
-RUN npm install
 
-# Copy source code
+# Install the base dependencies from package.json
+RUN npm install && \
+    npm install @nestjs/typeorm typeorm pg class-validator class-transformer
+# Copy the rest of your source code
 COPY . .
 
-# Install ts-node-dev globally for hot reload (optional if used in package.json)
+# Install development tools
 RUN npm install -g ts-node-dev
-
-# Expose port
+RUN npm run build
 EXPOSE 3000
 
-# Start the app in dev mode (with hot reload)
+# Start NestJS in watch mode
 CMD ["npm", "run", "start:dev"]
