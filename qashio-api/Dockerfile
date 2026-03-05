@@ -4,6 +4,7 @@ WORKDIR /app
 
 # Copy package files and install all dependencies (including dev)
 COPY package*.json ./
+RUN npm install @nestjs/typeorm typeorm pg
 RUN npm install
 
 # Copy source code
