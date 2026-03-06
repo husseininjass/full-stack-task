@@ -12,15 +12,36 @@ import { TransactionCreatedEvent } from "src/events/TransactionCreatedEvent";
 import { EventEmitter2 } from '@nestjs/event-emitter'; // Import this!
 import { TransactionType } from "src/enums/TransactionType";
 import { PaginatedResponseDto } from "src/responses/PaginatedResponse";
+import { UpdateTransactionDto } from "src/dto/transactions/UpdateTransaction";
+import { ICategoryRepository } from "src/IRepoInterface/ICategoryRepo";
 @Injectable()
 export class TransactionsServices implements ITransactionsService {
     constructor(
         @Inject('ITransactionsRepo') private readonly transactionRepo: ITransactionsRepo,
         @Inject('ICategoryService') private readonly categoryService: ICategoryService,
-        @Inject('IBudgetService') private readonly budgetService: IBudgetService,
+        @Inject('ICategoryRepository') private readonly catRepo: ICategoryRepository,
         private readonly dataSource: DataSource,
         private readonly eventEmitter: EventEmitter2 
     ) {}
+    async updateTransaction(id: number, dto: UpdateTransactionDto): Promise<Response<TransactionResponse>> {
+        try {
+            const transaction = await this.transactionRepo.findById(id);
+            if (!transaction) throw new Error('Transaction not found');
+
+            if (dto.amount !== undefined) transaction.amount = dto.amount;
+            if (dto.type !== undefined) transaction.type = dto.type;
+            if (dto.categoryId !== undefined) transaction.category = await this.catRepo.findByIdWithBudgets(dto.categoryId);
+
+            const updatedTransaction = await this.transactionRepo.save(transaction);
+            return new Response(TransactionResponse.fromEntity(updatedTransaction) , "transaction has been updated" , true);
+        } catch (error) {
+            return new Response(
+                new TransactionResponse(),
+                error?.message || 'failed to update transaction',
+                false
+            ); 
+        }
+    }
     async deleteTransaction(id: number): Promise<Response<boolean>> {
         const transaction = await this.transactionRepo.delete(id);
         if (!transaction) {
