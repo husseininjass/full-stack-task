@@ -1,6 +1,7 @@
-import { Controller, Post, Body, UsePipes, ValidationPipe , Get , Query , Inject , Param , ParseIntPipe , Delete } from '@nestjs/common';
+import { Controller, Post, Body, UsePipes, ValidationPipe , Get , Query , Inject , Param , ParseIntPipe , Delete , Put } from '@nestjs/common';
 import { CreateTransactionDto } from 'src/dto/transactions/CreateTransaction';
 import { TransactionResponse } from 'src/dto/transactions/TransactionResponse';
+import { UpdateTransactionDto } from 'src/dto/transactions/UpdateTransaction';
 import { ITransactionsService } from 'src/IServices/ITransactionsService';
 import { Response } from 'src/responses/Response';
 
@@ -27,5 +28,12 @@ export class TransactionsController {
     async deleteTransaction(@Param('id', ParseIntPipe) id: number) {
         return this.transactionService.deleteTransaction(id);
     }
-    
+    @Put(':id')
+    @UsePipes(new ValidationPipe({ transform: true }))
+    async updateTransaction(
+        @Param('id', ParseIntPipe) id: number,
+        @Body() dto: UpdateTransactionDto
+    ) {
+        return this.transactionService.updateTransaction(id, dto);
+    }
 }
