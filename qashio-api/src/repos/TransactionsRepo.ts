@@ -30,13 +30,14 @@ export class TransactionsRepo implements ITransactionsRepo{
     async findAllWithCount(
         skip = 0, 
         take = 10, 
+        sort: "ASC" | "DESC" = "DESC"
     ): Promise<[Transactions[], number]> {
         const relations = ['category']; 
         return this.repo.findAndCount({ 
             skip, 
             take, 
             relations,
-            order: { date: 'DESC' } 
+            order: { id: sort } 
         });
     }
 }

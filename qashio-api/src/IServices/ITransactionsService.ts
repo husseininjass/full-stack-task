@@ -6,7 +6,7 @@ import { Response } from "src/responses/Response";
 
 export interface ITransactionsService{
     createTransaction(dto:CreateTransactionDto) : Promise<Response<TransactionResponse>>;
-    getAllTransactions(page?:number , limit?:number):Promise<PaginatedResponseDto<TransactionResponse>>;
+    getAllTransactions(page?:number , limit?:number , sort?: string):Promise<PaginatedResponseDto<TransactionResponse>>;
     getOneTransaction(id:number): Promise<Response<TransactionResponse>>;
     deleteTransaction(id:number): Promise<Response<boolean>>;
     updateTransaction(id:number , dto: UpdateTransactionDto) : Promise<Response<TransactionResponse>>;
