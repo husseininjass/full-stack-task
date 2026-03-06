@@ -10,6 +10,12 @@ export class TransactionsRepo implements ITransactionsRepo{
         @InjectRepository(Transactions)
         private readonly repo: Repository<Transactions>,
     ) {}
+    async findById(id: number): Promise<Transactions | null> {
+        return this.repo.findOne({
+            where: { id },
+            relations: ["category"],
+        });
+    }
     async findAllWithCount(
         skip = 0, 
         take = 10, 

@@ -21,6 +21,14 @@ export class TransactionsServices implements ITransactionsService {
         private readonly dataSource: DataSource,
         private readonly eventEmitter: EventEmitter2 
     ) {}
+    async getOneTransaction(id: number): Promise<Response<TransactionResponse>> {
+        const transaction = await this.transactionRepo.findById(id);
+        if (!transaction) {
+            throw new Error("transaction not found");
+        }
+        return new Response(TransactionResponse.fromEntity(transaction) , "transaction has been fetched" , true);
+    }
+
     async getAllTransactions(page: number = 1, limit: number = 10): Promise<PaginatedResponseDto<TransactionResponse>> {
         const maxLimit = 20;
         const safeLimit = Math.min(limit || 10, maxLimit);
