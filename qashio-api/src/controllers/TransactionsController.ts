@@ -17,8 +17,8 @@ export class TransactionsController {
         return this.transactionService.createTransaction(dto);
     }
     @Get()
-    async getAllTransactions(@Query('page') page?: number , @Query('limit') limit?: number) {
-        return this.transactionService.getAllTransactions(page, limit);
+    async getAllTransactions(@Query('page') page?: number , @Query('limit') limit?: number , @Query("sort") sort?:string) {
+        return this.transactionService.getAllTransactions(page, limit , sort);
     }
     @Get(':id')
     async getOneTransaction(@Param('id', ParseIntPipe) id: number) {

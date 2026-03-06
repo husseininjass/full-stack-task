@@ -57,12 +57,13 @@ export class TransactionsServices implements ITransactionsService {
         return new Response(TransactionResponse.fromEntity(transaction) , "transaction has been fetched" , true);
     }
 
-    async getAllTransactions(page: number = 1, limit: number = 10): Promise<PaginatedResponseDto<TransactionResponse>> {
+    async getAllTransactions(page: number = 1, limit: number = 10 , sort = "DESC"): Promise<PaginatedResponseDto<TransactionResponse>> {
         const maxLimit = 20;
         const safeLimit = Math.min(limit || 10, maxLimit);
         const safePage = Math.max(page || 1, 1);
         const skip = (safePage - 1) * safeLimit;
-        const [transactions, total] = await this.transactionRepo.findAllWithCount(skip, safeLimit);
+        const sortOrder = (sort.toUpperCase() === 'ASC' ? 'ASC' : 'DESC') as 'ASC' | 'DESC';        
+        const [transactions, total] = await this.transactionRepo.findAllWithCount(skip, safeLimit , sortOrder);
         const data = transactions.map(trx => TransactionResponse.fromEntity(trx));
         return new PaginatedResponseDto(data, total, safePage, safeLimit);
     }
