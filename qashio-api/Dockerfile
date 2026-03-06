@@ -9,7 +9,7 @@ COPY package*.json ./
 
 # Install the base dependencies from package.json
 RUN npm install && \
-    npm install @nestjs/typeorm typeorm pg class-validator class-transformer
+    npm install @nestjs/typeorm typeorm pg class-validator class-transformer @nestjs/event-emitter
 # Copy the rest of your source code
 COPY . .
 

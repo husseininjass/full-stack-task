@@ -10,7 +10,11 @@ import { CategoryRepository } from './repos/CategoryRepo';
 import { TransactionsController } from './controllers/TransactionsController';
 import { TransactionsServices } from './services/TransactionsServices';
 import { TransactionsRepo } from './repos/TransactionsRepo';
-
+import { BudgetRepo } from './repos/BudgetRepo';
+import { BudgetServices } from './services/BudgetServices';
+import { Budget } from './entities/Budget';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { BudgetListener } from './listeners/BudgetListener';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -20,17 +24,20 @@ import { TransactionsRepo } from './repos/TransactionsRepo';
       username: 'postgres',       
       password: 'password',       
       database: 'qashio_points',  
-      entities: [Category,Transactions],
+      entities: [Category,Transactions,Budget],
       synchronize: true,          
-      logging: true,              
+      logging: true,       
     }),
-    TypeOrmModule.forFeature([Category,Transactions]),
+    EventEmitterModule.forRoot(),       
+    TypeOrmModule.forFeature([Category,Transactions,Budget]),
   ],
   controllers: [AppController, CategoryController , TransactionsController],
-  providers: [AppService,
+  providers: [AppService,BudgetListener,
     {provide : "ICategoryService" ,  useClass: CategoryService},
     {provide : "ITransactionsService" ,  useClass: TransactionsServices},
+    {provide : "IBudgetService" ,  useClass: BudgetServices},
     { provide: 'ICategoryRepository', useClass: CategoryRepository },
+    { provide: 'IBudgetRepo', useClass: BudgetRepo },
     { provide: 'ITransactionsRepo', useClass: TransactionsRepo }
   ],
 })

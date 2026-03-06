@@ -8,4 +8,9 @@ export class CreateCategoryDto {
   @IsNumber({}, { message: 'budget must be a number' })
   @Min(0, { message: 'budget must be at least 0' })
   budget?: number;
+
+  @IsOptional()
+  @IsNumber({}, { message: 'period must be a number' })
+  @Min(0, { message: 'period must be at least 1' })
+  period?: number;
 }

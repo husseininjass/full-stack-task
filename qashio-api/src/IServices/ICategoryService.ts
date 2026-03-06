@@ -6,4 +6,5 @@ import { Response } from 'src/responses/Response';
 export  interface ICategoryService{
     createCategory(dto:CreateCategoryDto) : Promise<Response<CategoryResponseDto>>;
     getAllCategories(page?:number , limit?:number):Promise<PaginatedResponseDto<CategoryResponseDto>>;
+    findOneCategory(id : number) : Promise<CategoryResponseDto>;
 }
