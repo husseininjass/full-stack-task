@@ -7,13 +7,14 @@ export class TransactionResponse{
     amount: number;
     date: Date;
     category: CategoryResponseDto;
-
+    type : string
     static fromEntity(transaction:Transactions) : TransactionResponse{
         const dto = new TransactionResponse();
         dto.id = transaction.id;
         dto.amount = transaction.amount;
         dto.date = transaction.date;
         dto.category = CategoryResponseDto.fromEntity(transaction.category);
+        dto.type = transaction.type
         return dto;
     }
 }

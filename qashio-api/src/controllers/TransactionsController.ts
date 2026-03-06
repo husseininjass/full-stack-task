@@ -15,4 +15,8 @@ export class TransactionsController {
     async createTransaction(@Body() dto: CreateTransactionDto): Promise<Response<TransactionResponse>> {
         return this.transactionService.createTransaction(dto);
     }
+    @Get()
+    async getAllCategories(@Query('page') page?: number , @Query('limit') limit?: number) {
+        return this.transactionService.getAllTransactions(page, limit);
+    }
 }

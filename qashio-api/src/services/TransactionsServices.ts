@@ -11,6 +11,7 @@ import { Transactions } from "src/entities/Transaction";
 import { TransactionCreatedEvent } from "src/events/TransactionCreatedEvent";
 import { EventEmitter2 } from '@nestjs/event-emitter'; // Import this!
 import { TransactionType } from "src/enums/TransactionType";
+import { PaginatedResponseDto } from "src/responses/PaginatedResponse";
 @Injectable()
 export class TransactionsServices implements ITransactionsService {
     constructor(
@@ -20,6 +21,15 @@ export class TransactionsServices implements ITransactionsService {
         private readonly dataSource: DataSource,
         private readonly eventEmitter: EventEmitter2 
     ) {}
+    async getAllTransactions(page: number = 1, limit: number = 10): Promise<PaginatedResponseDto<TransactionResponse>> {
+        const maxLimit = 20;
+        const safeLimit = Math.min(limit || 10, maxLimit);
+        const safePage = Math.max(page || 1, 1);
+        const skip = (safePage - 1) * safeLimit;
+        const [transactions, total] = await this.transactionRepo.findAllWithCount(skip, safeLimit);
+        const data = transactions.map(trx => TransactionResponse.fromEntity(trx));
+        return new PaginatedResponseDto(data, total, safePage, safeLimit);
+    }
 
     async createTransaction(dto: CreateTransactionDto): Promise<Response<TransactionResponse>> {
         const queryRunner = this.dataSource.createQueryRunner();

@@ -20,5 +20,4 @@ export class BudgetRepo implements IBudgetRepo{
     async save(budget: Budget): Promise<Budget> {
         return this.repo.save(budget);
     }
-
 }
