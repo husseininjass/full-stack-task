@@ -21,6 +21,13 @@ export class TransactionsServices implements ITransactionsService {
         private readonly dataSource: DataSource,
         private readonly eventEmitter: EventEmitter2 
     ) {}
+    async deleteTransaction(id: number): Promise<Response<boolean>> {
+        const transaction = await this.transactionRepo.delete(id);
+        if (!transaction) {
+            throw new Error("transaction not found");
+        }
+        return new Response(true , "transaction has been deleted" , true);
+    }
     async getOneTransaction(id: number): Promise<Response<TransactionResponse>> {
         const transaction = await this.transactionRepo.findById(id);
         if (!transaction) {

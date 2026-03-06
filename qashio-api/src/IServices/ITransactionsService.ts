@@ -7,4 +7,5 @@ export interface ITransactionsService{
     createTransaction(dto:CreateTransactionDto) : Promise<Response<TransactionResponse>>;
     getAllTransactions(page?:number , limit?:number):Promise<PaginatedResponseDto<TransactionResponse>>;
     getOneTransaction(id:number): Promise<Response<TransactionResponse>>;
+    deleteTransaction(id:number): Promise<Response<boolean>>;
 }
