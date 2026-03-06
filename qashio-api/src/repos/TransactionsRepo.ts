@@ -10,4 +10,16 @@ export class TransactionsRepo implements ITransactionsRepo{
         @InjectRepository(Transactions)
         private readonly repo: Repository<Transactions>,
     ) {}
+    async findAllWithCount(
+        skip = 0, 
+        take = 10, 
+    ): Promise<[Transactions[], number]> {
+        const relations = ['category']; 
+        return this.repo.findAndCount({ 
+            skip, 
+            take, 
+            relations,
+            order: { date: 'DESC' } 
+        });
+    }
 }
