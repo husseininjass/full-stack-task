@@ -1,4 +1,4 @@
-import { Controller, Post, Body, UsePipes, ValidationPipe , Get , Query , Inject , Param , ParseIntPipe } from '@nestjs/common';
+import { Controller, Post, Body, UsePipes, ValidationPipe , Get , Query , Inject , Param , ParseIntPipe , Delete } from '@nestjs/common';
 import { CreateTransactionDto } from 'src/dto/transactions/CreateTransaction';
 import { TransactionResponse } from 'src/dto/transactions/TransactionResponse';
 import { ITransactionsService } from 'src/IServices/ITransactionsService';
@@ -23,4 +23,9 @@ export class TransactionsController {
     async getOneTransaction(@Param('id', ParseIntPipe) id: number) {
         return this.transactionService.getOneTransaction(id);
     }
+    @Delete(':id')
+    async deleteTransaction(@Param('id', ParseIntPipe) id: number) {
+        return this.transactionService.deleteTransaction(id);
+    }
+    
 }
