@@ -6,17 +6,25 @@ import { ICategoryRepository } from 'src/IRepoInterface/ICategoryRepo';
 import { Category } from 'src/entities/Category';
 import { PaginatedResponseDto } from 'src/responses/PaginatedResponse';
 import { Response } from 'src/responses/Response';
+import { IBudgetService } from 'src/IServices/IBudgetService';
 
 @Injectable()
 export class CategoryService implements ICategoryService {
-    constructor(@Inject('ICategoryRepository') private readonly categoryRepo: ICategoryRepository) {}
+    constructor(
+        @Inject('ICategoryRepository') private readonly categoryRepo: ICategoryRepository,
+        @Inject('IBudgetService') private readonly budgetService: IBudgetService
+    ) {}
+    async findOneCategory(id: number): Promise<Category> {
+        const categoryWithBudget = await this.categoryRepo.findByIdWithBudgets(id);   
+        return categoryWithBudget;
+    }
 
     async getAllCategories(page = 1,limit = 10): Promise<PaginatedResponseDto<CategoryResponseDto>> {
         const maxLimit = 20;
         const safeLimit = limit > maxLimit ? maxLimit : limit;
         const skip = (page - 1) * safeLimit;
         const [categories, total] = await this.categoryRepo.findAllWithCount(skip, safeLimit);
-        const data = categories.map(CategoryResponseDto.fromEntity);
+        const data = categories.map(cat => CategoryResponseDto.fromEntity(cat));
         return new PaginatedResponseDto(data, total, page, safeLimit);
     }
 
@@ -28,10 +36,11 @@ export class CategoryService implements ICategoryService {
             }
             const category = new Category();
             category.name = dto.name;
-            category.budget = dto.budget ?? 500;
             const savedCategory = await this.categoryRepo.save(category);
+            await this.budgetService.createBudget(dto.budget ?? 500 , dto.period ?? 1 , savedCategory);
+            const categoryWithBudget = await this.categoryRepo.findByIdWithBudgets(savedCategory.id);
             return new Response(
-                CategoryResponseDto.fromEntity(savedCategory),
+                CategoryResponseDto.fromEntity(categoryWithBudget),
                 "a new category has been created successfully",
                 true
             );

@@ -11,6 +11,19 @@ export class CategoryRepository implements ICategoryRepository {
         private readonly repo: Repository<Category>,
     ) {}
 
+    async findByIdWithBudgets(id: number): Promise<Category> {
+        const category = await this.repo.findOne({
+            where: { id },
+            relations: ['budget'],
+        });
+
+        if (!category) {
+            throw new Error(`Category not found`);
+        }
+
+        return category;
+    }
+
     async count(): Promise<number> {
         return this.repo.count();
     }
@@ -27,7 +40,16 @@ export class CategoryRepository implements ICategoryRepository {
         return this.repo.save(category);
     }
 
-    async findAllWithCount(skip = 0, take = 10): Promise<[Category[], number]> {
-        return this.repo.findAndCount({ skip, take });
+    async findAllWithCount(
+        skip = 0, 
+        take = 10, 
+    ): Promise<[Category[], number]> {
+        const relations = ['budget']; 
+        return this.repo.findAndCount({ 
+            skip, 
+            take, 
+            relations,
+            order: { createdAt: 'DESC' } 
+        });
     }
 }

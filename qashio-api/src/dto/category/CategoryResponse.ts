@@ -1,10 +1,13 @@
 import { Category } from "src/entities/Category";
+import { Budget } from "src/entities/Budget";
+import { Transactions } from "src/entities/Transaction";
 
 export class CategoryResponseDto {
     id: number;
     name: string;
     createdAt: Date;
-    budget: number;
+    budget: Budget;
+    transactions?: Transactions[];
 
     static fromEntity(category: Category): CategoryResponseDto {
         const dto = new CategoryResponseDto();
