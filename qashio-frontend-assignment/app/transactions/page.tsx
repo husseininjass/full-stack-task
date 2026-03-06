@@ -1,6 +1,7 @@
 'use client';
 
 import { Box, Typography } from '@mui/material';
+import TransactionTable from './TransactionTable';
 
 export default function TransactionsPage() {
   return (
@@ -11,7 +12,7 @@ export default function TransactionsPage() {
       <Typography variant="body1" color="text.secondary">
         View and manage your transactions
       </Typography>
-      {/* Implement transactions list, filters, and details dialog here */}
+      <TransactionTable />
     </Box>
   );
 } 
