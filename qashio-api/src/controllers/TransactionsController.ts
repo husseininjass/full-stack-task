@@ -1,4 +1,4 @@
-import { Controller, Post, Body, UsePipes, ValidationPipe , Get , Query , Inject } from '@nestjs/common';
+import { Controller, Post, Body, UsePipes, ValidationPipe , Get , Query , Inject , Param , ParseIntPipe } from '@nestjs/common';
 import { CreateTransactionDto } from 'src/dto/transactions/CreateTransaction';
 import { TransactionResponse } from 'src/dto/transactions/TransactionResponse';
 import { ITransactionsService } from 'src/IServices/ITransactionsService';
@@ -14,5 +14,13 @@ export class TransactionsController {
     @UsePipes(new ValidationPipe({ transform: true }))
     async createTransaction(@Body() dto: CreateTransactionDto): Promise<Response<TransactionResponse>> {
         return this.transactionService.createTransaction(dto);
+    }
+    @Get()
+    async getAllTransactions(@Query('page') page?: number , @Query('limit') limit?: number) {
+        return this.transactionService.getAllTransactions(page, limit);
+    }
+    @Get(':id')
+    async getOneTransaction(@Param('id', ParseIntPipe) id: number) {
+        return this.transactionService.getOneTransaction(id);
     }
 }

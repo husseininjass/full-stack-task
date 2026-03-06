@@ -4,6 +4,8 @@ import { Injectable , Inject  } from '@nestjs/common';
 import { IBudgetRepo } from "src/IRepoInterface/IBudgetRepo";
 import { Category } from "src/entities/Category";
 import { TransactionType } from "src/enums/TransactionType";
+import { TransactionResponse } from "src/dto/transactions/TransactionResponse";
+import { PaginatedResponseDto } from "src/responses/PaginatedResponse";
 
 @Injectable()
 export class BudgetServices implements IBudgetService{
