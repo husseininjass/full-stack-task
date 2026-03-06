@@ -10,6 +10,9 @@ export class TransactionsRepo implements ITransactionsRepo{
         @InjectRepository(Transactions)
         private readonly repo: Repository<Transactions>,
     ) {}
+    save(transaction: Transactions): Promise<Transactions> {
+        return this.repo.save(transaction);
+    }
     async delete(id: number): Promise<Transactions | null> {
         const transaction = await this.repo.findOne({ where: { id } });
         if (!transaction) {
