@@ -23,7 +23,7 @@ interface Transaction {
   type: string;
   amount: string;
   category: Category;
-  date: string;
+  date: Date;
 }
 interface TransactionsResponse {
     data: Transaction[];
