@@ -1,5 +1,5 @@
 import { TransactionType } from 'src/enums/TransactionType';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne , CreateDateColumn } from 'typeorm';
 import { Category } from './Category';
 
 @Entity("transactions")
@@ -13,8 +13,8 @@ export class Transactions {
   @Column({ type: 'enum', enum: TransactionType })
   type: TransactionType;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' }) 
-  date: Date;
+    @CreateDateColumn()
+    date: Date;
 
   @ManyToOne(() => Category, category => category.transactions)
   category: Category;

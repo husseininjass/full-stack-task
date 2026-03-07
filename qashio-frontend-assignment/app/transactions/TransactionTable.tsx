@@ -4,31 +4,43 @@ import { useState } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, CircularProgress, Typography, Box, Button, Stack } from '@mui/material';
 import { useQuery, UseQueryOptions , keepPreviousData , useQueryClient } from '@tanstack/react-query';
 import Edit from './edit';
+import View from './view';
+
+interface Budget{
+    id : number,
+    limit : number,
+    period : number,
+    createdAt : Date
+}
+interface Category{
+    id : number,
+    createdAt : Date,
+    name : string,
+    budget : Budget
+}
 interface Transaction {
   id: number;
   type: string;
   amount: string;
-  category: string;
-  date: string;
+  category: Category;
+  date: Date;
 }
-
 interface TransactionsResponse {
-  data: Transaction[];
-  total: number;
-  page: number;
-  limit: number;
+    data: Transaction[];
+    total: number;
+    page: number;
+    limit: number;
 }
-
 const fetchTransactions = async (page: number, limit: number , sort:string): Promise<TransactionsResponse> => {
   const res = await fetch(`http://localhost:3000/transactions?page=${page}&limit=${limit}&sort=${sort}`);
   const data = await res.json();
   return {
     data: data.data.map((t: any) => ({
-      id: t.id,
-      type: t.type,
-      amount: t.amount,
-      category: t.category.name,
-      date: t.date,
+        id: t.id,
+        type: t.type,
+        amount: t.amount,
+        category: t.category,
+        date : t.date
     })),
     total: data.total,
     page: data.page,
@@ -36,10 +48,11 @@ const fetchTransactions = async (page: number, limit: number , sort:string): Pro
   };
 };
 export default function TransactionsTable() {
-    const queryClient = useQueryClient();
+    const queryClient = useQueryClient();   
     const [page, setPage] = useState(1);
     const [sort, setSort] = useState<string>('DESC');
     const [openEdit , setOpenEdit] = useState<boolean>(false)
+    const [openView , setOpenView] = useState<boolean>(false)
     const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
     const limit = 10;
     const queryOptions: UseQueryOptions<TransactionsResponse, Error> = {
@@ -61,6 +74,10 @@ export default function TransactionsTable() {
         setSelectedTransaction(trx);
         setOpenEdit(true);
     };
+    const viewTransaction = (trx:Transaction) =>{
+        setSelectedTransaction(trx);
+        setOpenView(true);
+    }
     const deleteTransaction = async (id: number) => {
     const res = await fetch(`http://localhost:3000/transactions/${id}`, {
         method: "DELETE",
@@ -105,7 +122,7 @@ export default function TransactionsTable() {
                     <TableCell>{trx.id}</TableCell>
                     <TableCell>{trx.type}</TableCell>
                     <TableCell>${trx.amount}</TableCell>
-                    <TableCell>{trx.category}</TableCell>
+                    <TableCell>{trx.category.name}</TableCell>
                     <TableCell>{new Date(trx.date).toLocaleDateString()}</TableCell>
                     <TableCell>
                         <Button
@@ -115,7 +132,7 @@ export default function TransactionsTable() {
                             Edit
                         </Button>
                         <Button style={{ marginRight: "8px" }} onClick={()=> handleDelete(trx)}>Delete</Button>
-                        <Button>View</Button>
+                        <Button onClick={()=> viewTransaction(trx)}>View</Button>
                     </TableCell>   
                 </TableRow>
                 ))}
@@ -125,6 +142,14 @@ export default function TransactionsTable() {
         <Edit
             open={openEdit}
             onClose={() => setOpenEdit(false)}
+            transaction={selectedTransaction ? { 
+                    ...selectedTransaction, 
+                    category: selectedTransaction.category.name 
+                } : null as any}        
+        />
+        <View
+            open={openView}
+            onClose={() => setOpenView(false)}
             transaction={selectedTransaction}
         />
     <Stack direction="row" spacing={1} justifyContent="center" alignItems="center" sx={{ mt: 3 }}>
@@ -149,8 +174,6 @@ export default function TransactionsTable() {
         </Button>
         ))}
     </Box>
-
-    {/* NEXT BUTTON */}
     <Button
         variant="outlined"
         disabled={page === totalPages || isPlaceholderData}

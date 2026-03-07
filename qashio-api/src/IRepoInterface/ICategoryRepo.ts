@@ -5,7 +5,7 @@ export interface ICategoryRepository {
     findByName(name: string): Promise<Category | null>;
     save(category: Category): Promise<Category>;
     count(): Promise<number>;
-    findAllWithCount(skip?: number, take?: number): Promise<[Category[], number]>;
+    findAllWithCount(skip?: number, take?: number ,sort?:string): Promise<[Category[], number]>;
     findByIdWithBudgets(id: number): Promise<Category>;
 
 }
