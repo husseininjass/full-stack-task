@@ -14,7 +14,7 @@ export class Transactions {
   type: TransactionType;
 
     @CreateDateColumn()
-    createdAt: Date;
+    date: Date;
 
   @ManyToOne(() => Category, category => category.transactions)
   category: Category;

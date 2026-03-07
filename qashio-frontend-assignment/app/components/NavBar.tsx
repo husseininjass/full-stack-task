@@ -6,27 +6,55 @@ import { usePathname } from 'next/navigation';
 
 export default function NavBar() {
   const pathname = usePathname();
-  
+
+  const navItems = [
+    { label: 'Transactions', href: '/transactions' },
+    { label: 'New Transaction', href: '/transactions/new' },
+    { label: 'Categories', href: '/categories' },
+    { label: 'New Category', href: '/categories/new' },
+  ];
+
   return (
     <AppBar position="static" color="primary" elevation={0}>
       <Toolbar>
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+        <Typography
+          component={Link}
+          href="/transactions"
+          variant="h6"
+          sx={{
+            flexGrow: 1,
+            textDecoration: 'none',
+            color: 'inherit',
+            fontWeight: 'bold',
+          }}
+        >
           Qashio
         </Typography>
-        <Box>
-          <Button
-            color="inherit"
-            component={Link}
-            href="/transactions/new"
-            sx={{ 
-              fontWeight: pathname === '/transactions/new' ? 'bold' : 'normal',
-              textDecoration: pathname === '/transactions/new' ? 'underline' : 'none'
-            }}
-          >
-            New Transaction
-          </Button>
+
+        <Box sx={{ display: 'flex', gap: 2 }}>
+          {navItems.map((item) => {
+            const active = pathname === item.href;
+
+            return (
+              <Button
+                key={item.href}
+                component={Link}
+                href={item.href}
+                color="inherit"
+                sx={{
+                  fontWeight: active ? 'bold' : 'normal',
+                  borderBottom: active
+                    ? '2px solid white'
+                    : '2px solid transparent',
+                  borderRadius: 0,
+                }}
+              >
+                {item.label}
+              </Button>
+            );
+          })}
         </Box>
       </Toolbar>
     </AppBar>
   );
-} 
+}

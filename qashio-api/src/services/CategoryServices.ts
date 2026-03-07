@@ -19,11 +19,12 @@ export class CategoryService implements ICategoryService {
         return categoryWithBudget;
     }
 
-    async getAllCategories(page = 1,limit = 10): Promise<PaginatedResponseDto<CategoryResponseDto>> {
+    async getAllCategories(page: number = 1,limit:number = 10 , sort = "DESC"): Promise<PaginatedResponseDto<CategoryResponseDto>> {
         const maxLimit = 20;
         const safeLimit = limit > maxLimit ? maxLimit : limit;
         const skip = (page - 1) * safeLimit;
-        const [categories, total] = await this.categoryRepo.findAllWithCount(skip, safeLimit);
+        const sortOrder = (sort.toUpperCase() === 'ASC' ? 'ASC' : 'DESC') as 'ASC' | 'DESC';    
+        const [categories, total] = await this.categoryRepo.findAllWithCount(skip, safeLimit ,sortOrder);
         const data = categories.map(cat => CategoryResponseDto.fromEntity(cat));
         return new PaginatedResponseDto(data, total, page, safeLimit);
     }

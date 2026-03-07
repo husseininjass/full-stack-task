@@ -39,7 +39,8 @@ const fetchTransactions = async (page: number, limit: number , sort:string): Pro
         id: t.id,
         type: t.type,
         amount: t.amount,
-        category: t.category
+        category: t.category,
+        date : t.date
     })),
     total: data.total,
     page: data.page,
