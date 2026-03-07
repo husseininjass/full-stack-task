@@ -16,8 +16,8 @@ export class CategoryController {
         return this.categoryService.createCategory(dto);
     }
     @Get()
-    async getAllCategories(@Query('page') page?: number , @Query('limit') limit?: number) {
-        return this.categoryService.getAllCategories(page, limit);
+    async getAllCategories(@Query('page') page?: number , @Query('limit') limit?: number ,  @Query("sort") sort?:string) {
+        return this.categoryService.getAllCategories(page, limit ,sort);
     }
 }
 

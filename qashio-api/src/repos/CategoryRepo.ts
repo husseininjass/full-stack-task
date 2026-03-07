@@ -43,13 +43,14 @@ export class CategoryRepository implements ICategoryRepository {
     async findAllWithCount(
         skip = 0, 
         take = 10, 
+        sort: "ASC" | "DESC" = "DESC"
     ): Promise<[Category[], number]> {
         const relations = ['budget']; 
         return this.repo.findAndCount({ 
             skip, 
             take, 
             relations,
-            order: { createdAt: 'DESC' } 
+            order: { id : sort } 
         });
     }
 }
