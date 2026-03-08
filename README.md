@@ -135,7 +135,7 @@ This command will:
 - Start the services defined in `docker-compose.yml`
 - Make the application accessible locally
   
-if you downloaded the file add a public folder to the front end root
+if you downloaded the repo folder add a public folder to the front end root
 then build with the docker command
 
 Happy tracking! 💸
