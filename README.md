@@ -134,5 +134,6 @@ This command will:
 - Build the Docker images for both frontend and backend
 - Start the services defined in `docker-compose.yml`
 - Make the application accessible locally
-
+if you downloaded the file add a public folder to the front end root
+then build with the docker command
 Happy tracking! 💸
